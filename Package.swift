@@ -11,7 +11,7 @@ let package = Package(
             targets: ["ChatBotSDK"]),
     ],
     dependencies: [
-        .package(url: "https://github.com/stephencelis/SQLite.swift.git", from: "0.0.0")
+        .package(url: "https://github.com/stephencelis/SQLite.swift.git", .exact("0.12.2")),
     ],
     targets: [
         .target(
