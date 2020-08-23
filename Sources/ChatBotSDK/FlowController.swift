@@ -29,6 +29,7 @@ final class FlowController {
         if let commandHandler = commandHandler {
             let flowAssembly = commandHandler.flowAssembly
             flow = Flow(
+                initInputHandlerId: flowAssembly.initialHandlerId,
                 inputHandlers: flowAssembly.inputHandlers,
                 action: flowAssembly.action,
                 context: flowAssembly.context
@@ -46,6 +47,7 @@ final class FlowController {
                 if let commandHandler = commandHandler {
                     let flowAssembly = commandHandler.flowAssembly
                     flow = Flow(
+                        initInputHandlerId: flowAssembly.initialHandlerId,
                         inputHandlers: flowAssembly.inputHandlers,
                         action: flowAssembly.action,
                         context: flowAssembly.context

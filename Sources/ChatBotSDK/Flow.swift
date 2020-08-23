@@ -1,7 +1,8 @@
 import Foundation
 
 final class Flow: Storable {
-    private let inputHandlers: [FlowInputHandler]
+    private let initInputHandlerId: String
+    private let inputHandlers: [String: FlowInputHandler]
     private let action: FlowAction
     private let context: Storable?
 
@@ -21,27 +22,44 @@ final class Flow: Storable {
         }
     }
 
-    private var inputStep: Int = -1
+    private var currentInputId: String = ""
 
     init(
-        inputHandlers: [FlowInputHandler],
+        initInputHandlerId: String,
+        inputHandlers: [String: FlowInputHandler],
         action: FlowAction,
         context: Storable?
     ) {
+        self.initInputHandlerId = initInputHandlerId
         self.inputHandlers = inputHandlers
         self.action = action
         self.context = context
     }
 
     func handleUpdate(userId: Int64, text: String) -> Result {
-        if (inputStep >= 0) {
-            inputHandlers[inputStep].handle(userId: userId, text: text)
+        var inputMarkup: FlowInputHandlerMarkup?
+        if !currentInputId.isEmpty,
+           let inputHandler = inputHandlers[currentInputId] {
+            let result = inputHandler.handle(userId: userId, text: text)
+            switch result {
+            case .continue(let id):
+                currentInputId = id
+            case .end:
+                currentInputId = ""
+            case .stay(let markup):
+                inputMarkup = markup
+            }
+        } else {
+            currentInputId = initInputHandlerId
         }
 
-        inputStep += 1
-
-        if inputStep < inputHandlers.count {
-            let inputMarkup = inputHandlers[inputStep].markup(userId: userId)
+        if let inputMarkup = inputMarkup {
+            return Result(finished: inputMarkup.interrupt,
+                          texts: inputMarkup.texts,
+                          keyboard: inputMarkup.keyboard)
+        } else if !currentInputId.isEmpty,
+           let inputHandler = inputHandlers[currentInputId] {
+            let inputMarkup = inputHandler.markup(userId: userId)
             return Result(finished: inputMarkup.interrupt,
                           texts: inputMarkup.texts,
                           keyboard: inputMarkup.keyboard)
@@ -55,7 +73,7 @@ final class Flow: Storable {
     func store() -> StorableContainer {
         let container = StorableContainer()
 
-        container.setInt(value: inputStep, key: "inputStep")
+        container.setString(value: currentInputId, key: "currentInputId")
 
         if let contextContainer = context?.store() {
             container.setContainer(container: contextContainer, key: "context")
@@ -65,8 +83,8 @@ final class Flow: Storable {
     }
 
     func restore(container: StorableContainer) {
-        if let inputStep = container.intValue(key: "inputStep") {
-            self.inputStep = inputStep
+        if let currentInputId = container.stringValue(key: "currentInputId") {
+            self.currentInputId = currentInputId
         }
 
         if let contextContainer = container.container(key: "context") {

@@ -2,12 +2,14 @@ import Foundation
 
 public class CancelOperationFlowAssembly: FlowAssembly {
 
-    public let inputHandlers: [FlowInputHandler]
+    public let initialHandlerId: String
+    public let inputHandlers: [String: FlowInputHandler]
     public let action: FlowAction
     public let context: Storable?
 
     public init() {
-        inputHandlers = []
+        initialHandlerId = ""
+        inputHandlers = [:]
         action = CancelOperationAction()
         context = nil
     }
