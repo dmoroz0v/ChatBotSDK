@@ -91,8 +91,8 @@ extension UnkeyedDecodingContainer {
 }
 
 public final class StorableContainer: Codable {
-    private var strings: [String: String] = [:]
-    private var ints: [String: Int] = [:]
+    private var strings: [String: [String]] = [:]
+    private var ints: [String: [Int]] = [:]
     private var containers: [String: StorableContainer] = [:]
 
     public init() {
@@ -103,19 +103,35 @@ public final class StorableContainer: Codable {
     }
 
     public func setString(value: String?, key: String) {
-        strings[key] = value
+        if let value = value {
+            strings[key] = [value]
+        } else {
+            strings[key] = nil
+        }
     }
 
     public func stringValue(key: String) -> String? {
+        return strings[key]?.first
+    }
+
+    public func setStrings(value: [String]?, key: String) {
+        strings[key] = value
+    }
+
+    public func stringsValue(key: String) -> [String]? {
         return strings[key]
     }
 
     public func setInt(value: Int?, key: String) {
-        ints[key] = value
+        if let value = value {
+            ints[key] = [value]
+        } else {
+            ints[key] = nil
+        }
     }
 
     public func intValue(key: String) -> Int? {
-        return ints[key]
+        return ints[key]?.first
     }
 
     public func setContainer(container: StorableContainer, key: String) {
@@ -127,7 +143,7 @@ public final class StorableContainer: Codable {
     }
 }
 
-public protocol Storable {
+public protocol Storable: AnyObject {
     func store() -> StorableContainer
     func restore(container: StorableContainer)
 }

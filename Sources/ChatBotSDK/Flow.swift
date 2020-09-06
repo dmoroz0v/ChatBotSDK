@@ -59,7 +59,7 @@ final class Flow: Storable {
                           keyboard: inputMarkup.keyboard)
         } else if !currentInputId.isEmpty,
            let inputHandler = inputHandlers[currentInputId] {
-            let inputMarkup = inputHandler.markup(userId: userId)
+            let inputMarkup = inputHandler.start(userId: userId)
             return Result(finished: inputMarkup.interrupt,
                           texts: inputMarkup.texts,
                           keyboard: inputMarkup.keyboard)
@@ -73,10 +73,23 @@ final class Flow: Storable {
     func store() -> StorableContainer {
         let container = StorableContainer()
 
-        container.setString(value: currentInputId, key: "currentInputId")
+        container.setString(
+            value: currentInputId,
+            key: "currentInputId"
+        )
+
+        if let inputHandler = inputHandlers[currentInputId] {
+            container.setContainer(
+                container: inputHandler.store(),
+                key: "currentInputHandler"
+            )
+        }
 
         if let contextContainer = context?.store() {
-            container.setContainer(container: contextContainer, key: "context")
+            container.setContainer(
+                container: contextContainer,
+                key: "context"
+            )
         }
 
         return container
@@ -85,6 +98,10 @@ final class Flow: Storable {
     func restore(container: StorableContainer) {
         if let currentInputId = container.stringValue(key: "currentInputId") {
             self.currentInputId = currentInputId
+        }
+
+        if let inputHandlerContainer = container.container(key: "currentInputHandler") {
+            inputHandlers[currentInputId]?.restore(container: inputHandlerContainer)
         }
 
         if let contextContainer = container.container(key: "context") {
