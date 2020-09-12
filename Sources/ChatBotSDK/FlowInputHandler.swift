@@ -8,3 +8,14 @@ public protocol FlowInputHandler: Storable {
     func start(userId: Int64) -> FlowInputHandlerMarkup
     func handle(userId: Int64, text: String) -> FlowInputHandlerResult
 }
+
+public extension FlowInputHandler {
+
+    func store() -> StorableContainer {
+        return StorableContainer()
+    }
+
+    func restore(container: StorableContainer) {
+    }
+
+}
