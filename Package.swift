@@ -9,15 +9,22 @@ let package = Package(
         .library(
             name: "ChatBotSDK",
             targets: ["ChatBotSDK"]),
+        .library(
+            name: "TgBotSDK",
+            targets: ["TgBotSDK"]),
     ],
     dependencies: [
-        .package(url: "https://github.com/stephencelis/SQLite.swift.git", .exact("0.12.2")),
     ],
     targets: [
         .target(
             name: "ChatBotSDK",
             dependencies: [
-                .product(name: "SQLite", package: "SQLite.swift"),
+            ]
+        ),
+        .target(
+            name: "TgBotSDK",
+            dependencies: [
+                "ChatBotSDK",
             ]
         ),
     ]
