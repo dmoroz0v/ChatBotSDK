@@ -25,7 +25,16 @@ final class FlowController {
     }
 
     func start(command: Command) {
-        let commandHandler = commandsHandlers.first { $0.command == command }
+        var commandHandler = commandsHandlers.first { $0.command == command }
+        if commandHandler == nil && command == Command(value: "/help") {
+            commandHandler = CommandHandler(
+                command: Command(value: "/help"),
+                description: "",
+                flowAssembly: HelpOperationFlowAssembly(
+                    commandsHandlers: commandsHandlers
+                )
+            )
+        }
         if let commandHandler = commandHandler {
             let flowAssembly = commandHandler.flowAssembly
             flow = Flow(
