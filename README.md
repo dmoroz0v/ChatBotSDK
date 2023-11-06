@@ -24,7 +24,7 @@ https://docs.vapor.codes/4.0/install/macos/
 
 `vapor xcode`
 
-7. Перейти в файл `Sources/Run-long-polling/main.swift`.
+7. Перейти в файл `Sources/App/BotFactory.swift`.
 
 8. В параметр token вписать токен бота полученого у @BotFather.
 
@@ -46,11 +46,11 @@ https://docs.vapor.codes/4.0/install/macos/
 
 1. Прописать токен.
 
-1.1. Перейти в файл `Sources/App/routes.swift`.
+1.1. Перейти в файл `Sources/App/BotFactory.swift`.
 
-1.2. В параметр token вписать токен бота полученого у `@BotFather`.
+1.2. В параметр `token` вписать токен бота полученого у `@BotFather`.
 
-2. Настроить домен и порт.
+2. Настройка домена и порта.
 
 2.1. Вам понадобится белый `ip` адрес.
 
@@ -73,9 +73,11 @@ https://docs.vapor.codes/4.0/install/macos/
 
 `cd HelloBot`
 
-3.2. Запустить команду `openssl`. Команда будет спрашивать ввод некоторых данных. Важно их все ввести и когда спросит домен, то ввести выбранный домен для бота `mybot.mydomain.ru`.
+3.2. Запустить команду `openssl`.
 
 `openssl req -newkey rsa:2048 -new -nodes -x509 -days 3650 -keyout key.pem -out cert.pem`
+
+Команда будет спрашивать ввод некоторых данных. Важно их все ввести и когда спросит домен, то ввести выбранный домен для бота `mybot.mydomain.ru`.
 
 3.3. В `Sources/App/configure.swift` раскоментировать строки. У меня получилось вот так:
 
@@ -89,35 +91,19 @@ https://docs.vapor.codes/4.0/install/macos/
         privateKey: .file("key.pem")
     )
 
-4. Зарегистрировать `webhook`.
+4. Регистрация `webhook`.
 
 4.1. Перейти в директорию проекта, если вы не в директории проекта.
 
 `cd HelloBot`
 
-4.2. Перейти в директорию проекта, если вы не в директории проекта.
+4.2. Зарегистрировать `webhook` с помощью команды `curl` заменив `<token>` на токен бота полученого у `@BotFather`.
 
 `curl -F "url=https://mybot.mydomain.ru:8443/webhook" -F "certificate=@cert.pem" https://api.telegram.org/bot<token>/setWebhook`
 
-5. Прописать в схеме путь до рабочей директории.
+5. Запустить в Xcode схему `Run`.
 
-5.1. Выбрать схеуму `Run`.
-
-5.2. Нажать `Edit Scheme`.
-
-5.3. Выбрать `Run` (между `Build` и `Test`).
-
-5.4. Перейти во вкладку `Options`.
-
-5.5. Поставить галочку `User custom working directory`.
-
-5.6. Указать директорию проекта. У меня получилось `~/Projects/HelloBot`.
-
-5.7. Нажать `Close`.
-
-6. Запустить в Xcode схему `Run`.
-
-7. Отправить боту одну из команд:
+6. Отправить боту одну из команд:
 
 `/revert` - команда попросит ввести строку и развернёт её
 
@@ -130,3 +116,5 @@ https://docs.vapor.codes/4.0/install/macos/
 `/cancel` - команда для отмены текущей выполняемой команды
 
 ## Deploy используя Docker
+
+TBD
