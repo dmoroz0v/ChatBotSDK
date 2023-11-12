@@ -15,33 +15,30 @@ public final class Bot {
         }
     }
 
-    private let flowStorage: FlowStorage
     private let commandsHandlers: [CommandHandler]
 
+    private var flowControllers: [Int64: FlowController] = [:]
+
     public init(
-        flowStorage: FlowStorage,
         commandsHandlers: [CommandHandler]
     ) {
-        self.flowStorage = flowStorage
         self.commandsHandlers = commandsHandlers
     }
 
     public func update(chatId: Int64, userId: Int64, text: String) -> Result {
-        let flowController = FlowController(flowStorage: flowStorage, userId: userId, commandsHandlers: commandsHandlers)
+        let flowController: FlowController
 
         if text.hasPrefix("/") {
+            flowController = FlowController(userId: userId, commandsHandlers: commandsHandlers)
+            flowControllers[userId] = flowController
             flowController.start(command: Command(value: text))
+        } else if let fc = flowControllers[userId] {
+            flowController = fc
         } else {
-            flowController.restore()
+            return Result(texts: ["Unexpected error"], keyboard: nil)
         }
 
         let result = flowController.handleUpdate(text: text)
-
-        if result.finished {
-            flowController.clear()
-        } else {
-            flowController.store()
-        }
 
         return Result(texts: result.texts, keyboard: result.keyboard)
     }

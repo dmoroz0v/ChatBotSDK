@@ -1,10 +1,10 @@
 import Foundation
 
-final class Flow: Storable {
+final class Flow {
     private let initInputHandlerId: String
     private let inputHandlers: [String: FlowInputHandler]
     private let action: FlowAction
-    private let context: Storable?
+    private let context: Any?
 
     struct Result {
         public var finished: Bool
@@ -28,7 +28,7 @@ final class Flow: Storable {
         initInputHandlerId: String,
         inputHandlers: [String: FlowInputHandler],
         action: FlowAction,
-        context: Storable?
+        context: Any?
     ) {
         self.initInputHandlerId = initInputHandlerId
         self.inputHandlers = inputHandlers
@@ -67,45 +67,6 @@ final class Flow: Storable {
             return Result(finished: true,
                           texts: action.execute(userId: userId),
                           keyboard: nil)
-        }
-    }
-
-    func store() -> StorableContainer {
-        let container = StorableContainer()
-
-        container.setString(
-            value: currentInputId,
-            key: "currentInputId"
-        )
-
-        if let inputHandler = inputHandlers[currentInputId] {
-            container.setContainer(
-                container: inputHandler.store(),
-                key: "currentInputHandler"
-            )
-        }
-
-        if let contextContainer = context?.store() {
-            container.setContainer(
-                container: contextContainer,
-                key: "context"
-            )
-        }
-
-        return container
-    }
-
-    func restore(container: StorableContainer) {
-        if let currentInputId = container.stringValue(key: "currentInputId") {
-            self.currentInputId = currentInputId
-        }
-
-        if let inputHandlerContainer = container.container(key: "currentInputHandler") {
-            inputHandlers[currentInputId]?.restore(container: inputHandlerContainer)
-        }
-
-        if let contextContainer = container.container(key: "context") {
-            context?.restore(container: contextContainer)
         }
     }
 }

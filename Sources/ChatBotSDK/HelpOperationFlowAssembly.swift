@@ -21,7 +21,7 @@ final class HelpOperationFlowAssembly: FlowAssembly {
     let initialHandlerId: String
     let inputHandlers: [String: FlowInputHandler]
     let action: FlowAction
-    let context: Storable?
+    let context: Any?
 
     init(commandsHandlers: [CommandHandler]) {
         initialHandlerId = ""

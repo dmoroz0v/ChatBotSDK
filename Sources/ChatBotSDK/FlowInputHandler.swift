@@ -4,18 +4,7 @@ public enum FlowInputHandlerResult {
     case stay(markup: FlowInputHandlerMarkup)
 }
 
-public protocol FlowInputHandler: Storable {
+public protocol FlowInputHandler {
     func start(userId: Int64) -> FlowInputHandlerMarkup
     func handle(userId: Int64, text: String) -> FlowInputHandlerResult
-}
-
-public extension FlowInputHandler {
-
-    func store() -> StorableContainer {
-        return StorableContainer()
-    }
-
-    func restore(container: StorableContainer) {
-    }
-
 }

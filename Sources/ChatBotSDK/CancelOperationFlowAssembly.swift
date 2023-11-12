@@ -5,7 +5,7 @@ public class CancelOperationFlowAssembly: FlowAssembly {
     public let initialHandlerId: String
     public let inputHandlers: [String: FlowInputHandler]
     public let action: FlowAction
-    public let context: Storable?
+    public let context: Any?
 
     public init() {
         initialHandlerId = ""

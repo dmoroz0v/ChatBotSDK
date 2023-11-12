@@ -20,13 +20,11 @@ public final class Bot {
     private var offset: Int?
 
     public init(
-        flowStorage: FlowStorage,
         botAssembly: BotAssembly,
         token: String,
         apiEndpoint: String
     ) {
         bot = ChatBotSDK.Bot(
-            flowStorage: flowStorage,
             commandsHandlers: botAssembly.commandsHandlers
         )
         self.token = token
