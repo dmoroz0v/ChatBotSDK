@@ -10,7 +10,9 @@ https://docs.vapor.codes/4.0/install/macos/
 
 3. Cоздать новый проект. Назвать его например `HelloBot`.
 
-`vapor new HelloBot --template https://github.com/dmoroz0v/ChatBotSDKVaporTemplate -n`
+`vapor new HelloBot --template https://github.com/dmoroz0v/ChatBotSDKVaporTemplate`
+
+Обратите внимание: если на вопросы нужен ли Fluent ответить положительно, то будет добавлена работа с БД и команды insert и select
 
 4. Перейти в директорию проекта.
 
@@ -69,9 +71,9 @@ https://docs.vapor.codes/4.0/install/macos/
 
 3. Сгенерировать сертификат.
 
-3.1. Перейти в директорию проекта, если вы не в директории проекта.
+3.1. Перейти в директорию `Cert`.
 
-`cd HelloBot`
+`cd HelloBot/Cert`
 
 3.2. Запустить команду `openssl`.
 
@@ -81,29 +83,35 @@ https://docs.vapor.codes/4.0/install/macos/
 
 3.3. В `Sources/App/configure.swift` раскоментировать строки. У меня получилось вот так:
 
-    try app.http.server.configuration.tlsConfiguration = .forServer(
+    try app.http.server.configuration.tlsConfiguration = .makeServerConfiguration(
         certificateChain: [
             .certificate(.init(
-                file: "cert.pem",
+                file: "Cert/cert.pem",
                 format: .pem
             ))
         ],
-        privateKey: .file("key.pem")
+        privateKey: .file("Cert/key.pem")
     )
 
 4. Регистрация `webhook`.
 
-4.1. Перейти в директорию проекта, если вы не в директории проекта.
+4.1. Перейти в директорию `Cert`.
 
-`cd HelloBot`
+`cd HelloBot/Cert`
 
 4.2. Зарегистрировать `webhook` с помощью команды `curl` заменив `<token>` на токен бота полученого у `@BotFather`.
 
 `curl -F "url=https://mybot.mydomain.ru:8443/webhook" -F "certificate=@cert.pem" https://api.telegram.org/bot<token>/setWebhook`
 
-5. Запустить в Xcode схему `Run`.
+5. в схеме прописать `Working directory`
 
-6. Отправить боту одну из команд:
+5.1. Перейти: Схема -> Options
+5.2. Поставить галочку Use custom Working directory
+5.3. Поставить путь до папки спроектом (у меня получился такой `/Users/<username>/Projects/hellobot`)
+
+6. Запустить в Xcode схему `hellobot`.
+
+7. Отправить боту одну из команд:
 
 `/revert` - команда попросит ввести строку и развернёт её
 
