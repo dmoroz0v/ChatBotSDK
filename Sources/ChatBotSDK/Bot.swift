@@ -25,7 +25,7 @@ public final class Bot {
         self.commandsHandlers = commandsHandlers
     }
 
-    public func update(chatId: Int64, userId: Int64, text: String) -> Result {
+    public func update(chatId: Int64, userId: Int64, text: String) async -> Result {
         let flowController: FlowController
 
         if text.hasPrefix("/") {
@@ -38,7 +38,7 @@ public final class Bot {
             return Result(texts: ["Unexpected error"], keyboard: nil)
         }
 
-        let result = flowController.handleUpdate(text: text)
+        let result = await flowController.handleUpdate(text: text)
 
         return Result(texts: result.texts, keyboard: result.keyboard)
     }

@@ -36,7 +36,7 @@ final class Flow {
         self.context = context
     }
 
-    func handleUpdate(userId: Int64, text: String) -> Result {
+    func handleUpdate(userId: Int64, text: String) async -> Result {
         var inputMarkup: FlowInputHandlerMarkup?
         if !currentInputId.isEmpty,
            let inputHandler = inputHandlers[currentInputId] {
@@ -65,7 +65,7 @@ final class Flow {
                           keyboard: inputMarkup.keyboard)
         } else {
             return Result(finished: true,
-                          texts: action.execute(userId: userId),
+                          texts: await action.execute(userId: userId),
                           keyboard: nil)
         }
     }

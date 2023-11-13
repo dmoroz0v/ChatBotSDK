@@ -31,30 +31,30 @@ public final class Bot {
         self.apiEndpoint = apiEndpoint
     }
 
-    public func handleUpdates() {
+    public func handleUpdates() async {
         let updates = _getUpdates(timeout: 10, offset: offset)
         let updatesResult = (updates?.result ?? []).sorted(by: { left, right in
             left.updateId > right.updateId
         })
         if let update = updatesResult.first {
             offset = update.updateId + 1
-            handleUpdate(update: update)
+            await handleUpdate(update: update)
         }
     }
 
-    public func handleUpdate(json: String) {
+    public func handleUpdate(json: String) async {
         let update = _parseUpdate(json: json)
         if let update = update {
-            handleUpdate(update: update)
+            await handleUpdate(update: update)
         }
     }
 
-    public func handleUpdate(update: Update) {
+    public func handleUpdate(update: Update) async {
         if let chatId = update.message?.chat.id,
            let userId = update.message?.from?.id,
            let text = update.message?.text {
 
-            let result = bot.update(chatId: chatId, userId: userId, text: text)
+            let result = await bot.update(chatId: chatId, userId: userId, text: text)
 
             let replyMarkup: ReplyMarkup
             if let keyboard = result.keyboard {

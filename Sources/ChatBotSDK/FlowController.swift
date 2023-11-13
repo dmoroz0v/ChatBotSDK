@@ -39,9 +39,9 @@ final class FlowController {
         }
     }
 
-    func handleUpdate(text: String) -> Flow.Result {
+    func handleUpdate(text: String) async -> Flow.Result {
         if let flow = flow {
-            return flow.handleUpdate(userId: userId, text: text)
+            return await flow.handleUpdate(userId: userId, text: text)
         } else {
             return Flow.Result(
                 finished: true,
