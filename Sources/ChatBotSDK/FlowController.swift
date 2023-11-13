@@ -13,20 +13,26 @@ final class FlowController {
         commandsHandlers: [CommandHandler]
     ) {
         self.userId = userId
+
+        var commandsHandlers = commandsHandlers
+
+        commandsHandlers.append(
+            CommandHandler(command: Command(value: "/cancel"),
+                           description: "Cancel current operation",
+                           flowAssembly: CancelOperationFlowAssembly()))
+
+        commandsHandlers.append(
+            CommandHandler(command: Command(value: "/help"),
+                           description: "",
+                           flowAssembly: HelpOperationFlowAssembly(
+                            commandsHandlers: commandsHandlers
+                        )))
+
         self.commandsHandlers = commandsHandlers
     }
 
     func start(command: Command) {
         var commandHandler = commandsHandlers.first { $0.command == command }
-        if commandHandler == nil && command == Command(value: "/help") {
-            commandHandler = CommandHandler(
-                command: Command(value: "/help"),
-                description: "",
-                flowAssembly: HelpOperationFlowAssembly(
-                    commandsHandlers: commandsHandlers
-                )
-            )
-        }
         if let commandHandler = commandHandler {
             let flowAssembly = commandHandler.flowAssembly
             flow = Flow(

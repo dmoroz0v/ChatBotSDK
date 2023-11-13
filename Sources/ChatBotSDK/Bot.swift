@@ -40,6 +40,10 @@ public final class Bot {
 
         let result = await flowController.handleUpdate(text: text)
 
+        if result.finished {
+            flowControllers[userId] = nil
+        }
+
         return Result(texts: result.texts, keyboard: result.keyboard)
     }
 }
