@@ -22,10 +22,12 @@ public final class Bot {
     public init(
         botAssembly: BotAssembly,
         token: String,
-        apiEndpoint: String
+        apiEndpoint: String,
+        unexpectedResult: ChatBotSDK.Bot.Result? = .init(texts: ["Unexpected error"], keyboard: nil)
     ) {
         bot = ChatBotSDK.Bot(
-            commandsHandlers: botAssembly.commandsHandlers
+            commandsHandlers: botAssembly.commandsHandlers,
+            unexpectedResult: unexpectedResult
         )
         self.token = token
         self.apiEndpoint = apiEndpoint
@@ -50,28 +52,36 @@ public final class Bot {
     }
 
     public func handleUpdate(update: Update) async {
-        if let chatId = update.message?.chat.id,
-           let userId = update.message?.from?.id,
-           let text = update.message?.text {
+        guard let chat = update.message?.chat,
+              let user = update.message?.from,
+              let text = update.message?.text else {
+            return
+        }
 
-            let result = await bot.update(chatId: chatId, userId: userId, text: text)
+        guard let result = await bot.update(
+            chat: .init(id: chat.id),
+            user: .init(id: user.id, username: user.username),
+            text: text
+        ) else {
+            return
+        }
 
-            let replyMarkup: ReplyMarkup
-            if let keyboard = result.keyboard {
-                let markup = replyKeyboardMarkup(keyboard: keyboard)
-                replyMarkup = .markup(markup)
-            } else {
-                replyMarkup = .hide(ReplyKeyboardHide(hide: true))
-            }
+        let replyMarkup: ReplyMarkup
+        if let keyboard = result.keyboard {
+            let markup = replyKeyboardMarkup(keyboard: keyboard)
+            replyMarkup = .markup(markup)
+        } else {
+            replyMarkup = .hide(ReplyKeyboardHide(hide: true))
+        }
 
-            for text in result.texts {
-                let sendMessage = SendMessage(
-                    chatId: chatId,
-                    text: text,
-                    replyMarkup: replyMarkup)
+        for text in result.texts {
+            let sendMessage = SendMessage(
+                chatId: chat.id,
+                text: text,
+                replyMarkup: replyMarkup
+            )
 
-                _sendMessage(messege: sendMessage)
-            }
+            _sendMessage(messege: sendMessage)
         }
     }
 

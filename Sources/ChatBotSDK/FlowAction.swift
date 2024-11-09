@@ -1,5 +1,5 @@
 import Foundation
 
 public protocol FlowAction {
-    func execute(userId: Int64) async -> [String]
+    func execute(chat: Chat, user: User) async -> [String]
 }

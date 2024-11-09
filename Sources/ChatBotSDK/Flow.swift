@@ -36,11 +36,11 @@ final class Flow {
         self.context = context
     }
 
-    func handleUpdate(userId: Int64, text: String) async -> Result {
+    func handleUpdate(chat: Chat, user: User, text: String) async -> Result {
         var inputMarkup: FlowInputHandlerMarkup?
         if !currentInputId.isEmpty,
            let inputHandler = inputHandlers[currentInputId] {
-            let result = inputHandler.handle(userId: userId, text: text)
+            let result = inputHandler.handle(chat: chat, user: user, text: text)
             switch result {
             case .continue(let id):
                 currentInputId = id
@@ -59,13 +59,13 @@ final class Flow {
                           keyboard: inputMarkup.keyboard)
         } else if !currentInputId.isEmpty,
            let inputHandler = inputHandlers[currentInputId] {
-            let inputMarkup = inputHandler.start(userId: userId)
+            let inputMarkup = inputHandler.start(chat: chat, user: user)
             return Result(finished: inputMarkup.interrupt,
                           texts: inputMarkup.texts,
                           keyboard: inputMarkup.keyboard)
         } else {
             return Result(finished: true,
-                          texts: await action.execute(userId: userId),
+                          texts: await action.execute(chat: chat, user: user),
                           keyboard: nil)
         }
     }

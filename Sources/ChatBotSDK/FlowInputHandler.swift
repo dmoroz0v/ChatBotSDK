@@ -5,6 +5,6 @@ public enum FlowInputHandlerResult {
 }
 
 public protocol FlowInputHandler {
-    func start(userId: Int64) -> FlowInputHandlerMarkup
-    func handle(userId: Int64, text: String) -> FlowInputHandlerResult
+    func start(chat: Chat, user: User) -> FlowInputHandlerMarkup
+    func handle(chat: Chat, user: User, text: String) -> FlowInputHandlerResult
 }

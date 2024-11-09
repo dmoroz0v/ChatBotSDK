@@ -2,17 +2,20 @@ import Foundation
 
 final class FlowController {
 
-    private let userId: Int64
+    private let chat: Chat
+    private let user: User
     private let commandsHandlers: [CommandHandler]
 
     private var flow: Flow? = nil
     private var command: Command? = nil
 
     init(
-        userId: Int64,
+        chat: Chat,
+        user: User,
         commandsHandlers: [CommandHandler]
     ) {
-        self.userId = userId
+        self.chat = chat
+        self.user = user
 
         var commandsHandlers = commandsHandlers
 
@@ -47,7 +50,7 @@ final class FlowController {
 
     func handleUpdate(text: String) async -> Flow.Result {
         if let flow = flow {
-            return await flow.handleUpdate(userId: userId, text: text)
+            return await flow.handleUpdate(chat: chat, user: user, text: text)
         } else {
             return Flow.Result(
                 finished: true,

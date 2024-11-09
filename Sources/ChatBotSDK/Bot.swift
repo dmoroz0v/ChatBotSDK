@@ -16,32 +16,39 @@ public final class Bot {
     }
 
     private let commandsHandlers: [CommandHandler]
+    private let unexpectedResult: Result?
 
     private var flowControllers: [Int64: FlowController] = [:]
 
     public init(
-        commandsHandlers: [CommandHandler]
+        commandsHandlers: [CommandHandler],
+        unexpectedResult: Result?
     ) {
         self.commandsHandlers = commandsHandlers
+        self.unexpectedResult = unexpectedResult
     }
 
-    public func update(chatId: Int64, userId: Int64, text: String) async -> Result {
+    public func update(chat: Chat, user: User, text: String) async -> Result? {
         let flowController: FlowController
 
-        if text.hasPrefix("/") {
-            flowController = FlowController(userId: userId, commandsHandlers: commandsHandlers)
-            flowControllers[userId] = flowController
-            flowController.start(command: Command(value: text))
-        } else if let fc = flowControllers[userId] {
+        if text.hasPrefix("/"), let commandValue = text.split(separator: "@").first {
+            flowController = FlowController(
+                chat: chat,
+                user: user,
+                commandsHandlers: commandsHandlers
+            )
+            flowControllers[user.id] = flowController
+            flowController.start(command: Command(value: String(commandValue)))
+        } else if let fc = flowControllers[user.id] {
             flowController = fc
         } else {
-            return Result(texts: ["Unexpected error"], keyboard: nil)
+            return unexpectedResult
         }
 
         let result = await flowController.handleUpdate(text: text)
 
         if result.finished {
-            flowControllers[userId] = nil
+            flowControllers[user.id] = nil
         }
 
         return Result(texts: result.texts, keyboard: result.keyboard)

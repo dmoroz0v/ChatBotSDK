@@ -17,6 +17,11 @@ public struct Update: Decodable {
 
 public struct User: Decodable {
     public var id: Int64
+    public var username: String?
+}
+
+public struct Chat: Decodable {
+    public var id: Int64
 
     public init(id: Int64) {
         self.id = id
@@ -36,14 +41,6 @@ public struct Message: Decodable {
         self.chat = chat
         self.text = text
         self.from = from
-    }
-}
-
-public struct Chat: Decodable {
-    public var id: Int64
-
-    public init(id: Int64) {
-        self.id = id
     }
 }
 

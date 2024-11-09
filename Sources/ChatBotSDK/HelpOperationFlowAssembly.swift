@@ -8,7 +8,7 @@ final class HelpOperationAction: FlowAction {
         self.commandsHandlers = commandsHandlers
     }
 
-    func execute(userId: Int64) -> [String] {
+    func execute(chat: Chat, user: User) -> [String] {
         let result = commandsHandlers.map {
             $0.command.value + " - " + $0.description
         }
