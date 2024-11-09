@@ -26,7 +26,7 @@ https://docs.vapor.codes/4.0/install/macos/
 
 При запуске через terminal база данных создается в директории исходного кода, поэтому для запуска через xcode желательно указать такой же путь - на случай если будете запускать то в терминале, то в xcode - чтобы использовалась одна и та же база данных
 
-Согласно документации https://docs.vapor.codes/getting-started/xcode/#custom-working-directory указать в схеме
+Сделать согласно документации https://docs.vapor.codes/getting-started/xcode/#custom-working-directory
 
 ## Настройка телеграм бота
 
@@ -78,13 +78,24 @@ https://docs.vapor.codes/4.0/install/macos/
 
 3. Генерация сертификата и регистрация `webhook`
 
-TBD
+Согласно инструкциям выше в файле `.env` должны быть уже указаны `BOT_TOKEN` и `BOT_DOMAIN`
+
+А так же в файл `.env` добавить `CERT_COUNTRY`, `CERT_CITY`, `CERT_COMPANY` и `CERT_DEPARTMENT`
+
+Запусть скрипт `./make_cert_and_register_webhook.sh`
 
 4. Прописать Custom Working Directory
 
-TBD
+Нужно обязательно чтобы пути до сертификатов работали. Сделать согласно документации https://docs.vapor.codes/getting-started/xcode/#custom-working-directory
 
 5. Запустить бота через схему `HelloBot` нажав на `Run` в Xcode либо `swift run` в директории проекта
+
+## Как переключаться между webhook и long polling
+
+Должны быть указаны в `.env` переменные `BOT_TOKEN`, `BOT_DOMAIN`, `CERT_COUNTRY`, `CERT_CITY`, `CERT_COMPANY` и `CERT_DEPARTMENT` а так же удачно произведены все настройки выше
+
+- для переключения на long polling в файле `.env` указать `LONG_POLLING=1` и вызывать `./unregister_webhook.sh`
+- для включения на webhook в файле `.env` удалить `LONG_POLLING=1` и вызывать `./make_cert_and_register_webhook.sh`
 
 ## Deploy используя Docker
 
