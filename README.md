@@ -8,7 +8,7 @@ https://docs.vapor.codes/4.0/install/macos/
 
 2. Cоздать новый проект. Например будем использовать имя `HelloBot`
 
-`vapor new HelloBot --template https://github.com/dmoroz0v/ChatBotSDKVaporTemplate`
+`vapor new HelloBot --template https://github.com/dmoroz0v/ChatBotSDKVaporTemplate --branch main`
 
 Обратите внимание: если на вопросы нужен ли Fluent ответить положительно, то будет добавлена работа с БД и команды insert и select
 
@@ -38,7 +38,7 @@ https://docs.vapor.codes/4.0/install/macos/
 
 1. В директории с проектом в файл `.env` добавить `LONG_POLLING=1` новой строчкой
 
-2. Запустить `HelloBot` нажав на `Run` в Xcode
+2. Запустить `HelloBot` нажав на `Run` в Xcode либо `swift run` в директории проекта
 
 ## Что бот умеет из коробки
 
