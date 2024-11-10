@@ -4,7 +4,7 @@
 
 1. Установить Vapor
 
-https://docs.vapor.codes/4.0/install/macos/
+https://docs.vapor.codes/install/macos/
 
 2. Cоздать новый проект. Например будем использовать имя `HelloBot`
 
@@ -81,6 +81,13 @@ https://docs.vapor.codes/4.0/install/macos/
 Согласно инструкциям выше в файле `.env` должны быть уже указаны `BOT_TOKEN` и `BOT_DOMAIN`
 
 А так же в файл `.env` добавить `CERT_COUNTRY`, `CERT_CITY`, `CERT_COMPANY` и `CERT_DEPARTMENT`
+
+Например:
+
+    CERT_COUNTRY=RU
+    CERT_CITY=Moscow
+    CERT_COMPANY=MyCompany
+    CERT_DEPARTMENT=MyDepartment
 
 Запусть скрипт `./make_cert_and_register_webhook.sh`
 
