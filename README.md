@@ -10,7 +10,7 @@
 
     `vapor new PROJECT_NAME --template https://github.com/dmoroz0v/ChatBotSDKVaporTemplate --branch main`
 
-    В результате в текущей директории будет создана папка с именем проекта с содержимым бота
+    В результате в текущей директории будет создана папка с именем проекта и с содержимым бота
 
 2. Конфигурационные данные для работы бота
 
@@ -46,6 +46,7 @@
     Полезная информация о Custom Working Directory из документации Vapor
     > - Из неё читается файл `.env`
     > - В ней создаётся файл базы данных SQLite (если выбрать использование SQLite в качестве Fluent(ORM) на этапе создания проекта)
+    > - Из неё читаются сертификаты в случае работы бота через Webhook
     > - При запуске через терминал - она по умолчанию является директорией проекта т.е. для запуска из терминала дополнительных настроек не требуется
 
     Сделать согласно документации https://docs.vapor.codes/getting-started/xcode/#custom-working-directory
@@ -69,11 +70,12 @@
     BOT_DOMAIN=...
     CERT_COUNTRY=RU
     CERT_CITY=Moscow
-    CERT_COMPANY=MyCompany
-    CERT_DEPARTMENT=MyDepartment
+    CERT_COMPANY="My Company"
+	CERT_DEPARTMENT="My Department"
     ...
     ````
-2. В папке проекта выполнить скрипт `./make_cert.sh`
+2. [Опционально] В файл `.env` добавить `BOT_IP_ADDRESS=...` со значением ip адреса на который будет настроен домен
+3. В папке проекта выполнить скрипт `./make_cert.sh`
 
     Скрипт удаляет старые и создает новые `cert.pem` и `key.pem` в папке `Cert` директории проекта. `*.pem` файлы игнорируются git-ом
 
